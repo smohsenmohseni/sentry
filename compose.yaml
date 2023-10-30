@@ -105,7 +105,7 @@ services:
   smtp:
     <<: *restart_policy
     image: tianon/exim4
-    hostname: "${SENTRY_MAIL_HOST:-}"
+    hostname: "${SENTRY_MAIL_HOST1:-}"
     volumes:
       - "sentry-smtp:/var/spool/exim4"
       - "sentry-smtp-log:/var/log/exim4"
@@ -336,6 +336,9 @@ services:
       nofile:
         soft: 4096
         hard: 4096
+    networks:
+      - default
+      - sentry
     healthcheck:
       <<: *healthcheck_defaults
       test:
@@ -433,6 +436,9 @@ services:
         read_only: true
         source: ./geoip
         target: /geoip
+    networks:
+      - default
+      - sentry
     depends_on:
       kafka:
         <<: *depends_on-healthy
@@ -498,3 +504,6 @@ volumes:
   sentry-kafka-log:
   sentry-smtp-log:
   sentry-clickhouse-log:
+
+networks:
+  sentry:
